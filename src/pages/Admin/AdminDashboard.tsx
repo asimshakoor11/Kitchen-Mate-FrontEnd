@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, BarChart, Bar } from "recharts";
-import { Package, ShoppingCart, TruckDelivery, DollarSign } from "lucide-react";
+import { Package, ShoppingCart, Truck, DollarSign } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import AdminLayout from "@/components/Admin/AdminLayout";
 
@@ -95,7 +95,7 @@ const AdminDashboard = () => {
             <CardContent className="p-6">
               <div className="flex items-center space-x-4">
                 <div className="bg-yellow-100 p-3 rounded-full">
-                  <TruckDelivery className="h-6 w-6 text-yellow-700" />
+                  <Truck className="h-6 w-6 text-yellow-700" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Pending Orders</p>
