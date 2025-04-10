@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { User, Heart, Menu, X, ShoppingCart } from "lucide-react";
+import { User, Heart, Menu, X, ShoppingCart, Package } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
@@ -27,6 +27,12 @@ const Navbar = () => {
             <Link to="/admin" className="text-gray-700 hover:text-gray-900 font-medium">
               Admin
             </Link>
+            {isLoggedIn && (
+              <Link to="/orders" className="text-gray-700 hover:text-gray-900 font-medium flex items-center gap-1">
+                <Package size={18} />
+                Orders
+              </Link>
+            )}
           </div>
           
           {/* Contact and Icons - Hidden on mobile */}
@@ -77,6 +83,12 @@ const Navbar = () => {
               <Link to="/admin" className="py-2 text-gray-700 font-medium">
                 Admin
               </Link>
+              {isLoggedIn && (
+                <Link to="/orders" className="py-2 text-gray-700 font-medium flex items-center gap-1">
+                  <Package size={18} />
+                  Orders
+                </Link>
+              )}
               <div className="flex justify-between py-2 border-t border-gray-200">
                 <p className="text-sm text-gray-500">For Delivery</p>
                 <p className="text-sm font-semibold">+880-1686608</p>
