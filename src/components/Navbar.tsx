@@ -2,10 +2,13 @@
 import { useState } from "react";
 import { User, Heart, Menu, X, ShoppingCart, Package } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // This would be replaced with actual auth state
+  const { getTotalItems } = useCart();
+  const cartItemCount = getTotalItems();
   
   return (
     <header className="bg-white shadow-sm">
@@ -45,7 +48,14 @@ const Navbar = () => {
               <User size={20} className="text-gray-700" />
             </Link>
             <Heart size={20} className="text-gray-700" />
-            <ShoppingCart size={20} className="text-gray-700" />
+            <Link to="/cart" className="relative">
+              <ShoppingCart size={20} className="text-gray-700" />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
             
             {isLoggedIn ? (
               <Link to="/logout" className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded">
@@ -60,7 +70,14 @@ const Navbar = () => {
           
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
-            <ShoppingCart size={20} className="text-gray-700 mr-4" />
+            <Link to="/cart" className="relative mr-4">
+              <ShoppingCart size={20} className="text-gray-700" />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
             <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? 
                 <X size={24} className="text-gray-700" /> : 

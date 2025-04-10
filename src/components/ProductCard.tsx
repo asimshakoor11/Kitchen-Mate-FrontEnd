@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Heart, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
 
 interface ProductCardProps {
   imageUrl: string;
@@ -15,6 +16,13 @@ interface ProductCardProps {
 
 const ProductCard = ({ imageUrl, title, price, rating, isNew, isSale, id = 1 }: ProductCardProps) => {
   const [isWishlist, setIsWishlist] = useState(false);
+  const { addToCart } = useCart();
+  
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart({ id, imageUrl, title, price });
+  };
   
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden relative group">
@@ -43,11 +51,7 @@ const ProductCard = ({ imageUrl, title, price, rating, isNew, isSale, id = 1 }: 
           <Heart size={16} className={isWishlist ? "fill-red-500 text-red-500" : "text-gray-500"} />
         </button>
         <button 
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Add to cart:", title);
-          }}
+          onClick={handleAddToCart}
           className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
         >
           <ShoppingCart size={16} className="text-gray-500" />
@@ -78,11 +82,7 @@ const ProductCard = ({ imageUrl, title, price, rating, isNew, isSale, id = 1 }: 
           <div className="flex justify-between items-center mt-2">
             <div className="font-bold text-gray-900">{price}</div>
             <button 
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log("Buy now:", title);
-              }}
+              onClick={handleAddToCart}
               className="text-xs text-amber-500 hover:text-amber-700 font-medium"
             >
               Buy Now
