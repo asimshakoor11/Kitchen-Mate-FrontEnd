@@ -1,9 +1,11 @@
 
 import { useState } from "react";
-import { Search, User, Heart, Menu, X } from "lucide-react";
+import { User, Heart, Menu, X, ShoppingCart } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // This would be replaced with actual auth state
   
   return (
     <header className="bg-white shadow-sm">
@@ -11,21 +13,20 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0 font-bold text-xl">
-            <span>Kitchen Mate</span>
+            <Link to="/">Kitchen Mate</Link>
           </div>
           
-          {/* Search Bar - Hidden on mobile */}
-          <div className="hidden md:block flex-1 max-w-xl mx-8">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search for your favorite products..."
-                className="w-full py-2 pl-4 pr-10 rounded-full bg-gray-100 focus:outline-none"
-              />
-              <div className="absolute right-3 top-2.5">
-                <Search size={18} className="text-gray-500" />
-              </div>
-            </div>
+          {/* Nav Links - Hidden on mobile */}
+          <div className="hidden md:flex items-center space-x-8">
+            <Link to="/" className="text-gray-700 hover:text-gray-900 font-medium">
+              Home
+            </Link>
+            <Link to="/products" className="text-gray-700 hover:text-gray-900 font-medium">
+              Products
+            </Link>
+            <Link to="/admin" className="text-gray-700 hover:text-gray-900 font-medium">
+              Admin
+            </Link>
           </div>
           
           {/* Contact and Icons - Hidden on mobile */}
@@ -34,12 +35,26 @@ const Navbar = () => {
               <p className="text-xs text-gray-500">For Delivery</p>
               <p className="text-sm font-semibold">+880-1686608</p>
             </div>
-            <User size={20} className="text-gray-700" />
+            <Link to="/account">
+              <User size={20} className="text-gray-700" />
+            </Link>
             <Heart size={20} className="text-gray-700" />
+            <ShoppingCart size={20} className="text-gray-700" />
+            
+            {isLoggedIn ? (
+              <Link to="/logout" className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded">
+                Logout
+              </Link>
+            ) : (
+              <Link to="/login" className="bg-gray-900 hover:bg-black text-white font-medium py-2 px-4 rounded">
+                Login / Signup
+              </Link>
+            )}
           </div>
           
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center">
+            <ShoppingCart size={20} className="text-gray-700 mr-4" />
             <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? 
                 <X size={24} className="text-gray-700" /> : 
@@ -49,24 +64,19 @@ const Navbar = () => {
           </div>
         </div>
         
-        {/* Mobile Search - Only visible on mobile */}
-        <div className="md:hidden pb-4">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search for your favorite products..."
-              className="w-full py-2 pl-4 pr-10 rounded-full bg-gray-100 focus:outline-none"
-            />
-            <div className="absolute right-3 top-2.5">
-              <Search size={18} className="text-gray-500" />
-            </div>
-          </div>
-        </div>
-        
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden pb-4">
             <div className="flex flex-col space-y-3">
+              <Link to="/" className="py-2 text-gray-700 font-medium">
+                Home
+              </Link>
+              <Link to="/products" className="py-2 text-gray-700 font-medium">
+                Products
+              </Link>
+              <Link to="/admin" className="py-2 text-gray-700 font-medium">
+                Admin
+              </Link>
               <div className="flex justify-between py-2 border-t border-gray-200">
                 <p className="text-sm text-gray-500">For Delivery</p>
                 <p className="text-sm font-semibold">+880-1686608</p>
@@ -81,6 +91,15 @@ const Navbar = () => {
                   <span>Wishlist</span>
                 </button>
               </div>
+              {isLoggedIn ? (
+                <Link to="/logout" className="bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded text-center">
+                  Logout
+                </Link>
+              ) : (
+                <Link to="/login" className="bg-gray-900 text-white font-medium py-2 px-4 rounded text-center">
+                  Login / Signup
+                </Link>
+              )}
             </div>
           </div>
         )}
