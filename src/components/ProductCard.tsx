@@ -5,16 +5,16 @@ import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 
 interface ProductCardProps {
+  id: number;
   imageUrl: string;
   title: string;
   price: string;
   rating: number;
   isNew?: boolean;
   isSale?: boolean;
-  id?: number;
 }
 
-const ProductCard = ({ imageUrl, title, price, rating, isNew, isSale, id = 1 }: ProductCardProps) => {
+const ProductCard = ({ id, imageUrl, title, price, rating, isNew, isSale }: ProductCardProps) => {
   const [isWishlist, setIsWishlist] = useState(false);
   const { addToCart } = useCart();
   

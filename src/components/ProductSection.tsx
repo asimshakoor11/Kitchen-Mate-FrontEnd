@@ -1,7 +1,8 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { getProducts, Product } from "@/lib/supabase";
 
 interface ProductSectionProps {
   title: string;
@@ -9,49 +10,26 @@ interface ProductSectionProps {
   filterOptions: string[];
 }
 
-// Mock product data
-const products = [
-  {
-    id: 1,
-    title: "Summer Fresh Melon Juice Drink",
-    price: "PKR 218.00",
-    rating: 4,
-    imageUrl: "https://i.imgur.com/JyVIB5o.png",
-  },
-  {
-    id: 2,
-    title: "Summer Fresh Mango Juice Drink",
-    price: "PKR 218.00",
-    rating: 5,
-    imageUrl: "https://i.imgur.com/ulXVfEU.png",
-    isSale: true,
-  },
-  {
-    id: 3,
-    title: "Summer Fresh Cucumber Juice Drink",
-    price: "PKR 218.00",
-    rating: 4,
-    imageUrl: "https://i.imgur.com/42vSMQU.png",
-  },
-  {
-    id: 4,
-    title: "Summer Fresh Milk Juice Drink",
-    price: "PKR 218.00",
-    rating: 3,
-    imageUrl: "https://i.imgur.com/PVkQZtl.jpg",
-  },
-  {
-    id: 5,
-    title: "Summer Fresh Banana Juice Drink",
-    price: "PKR 218.00",
-    rating: 5,
-    imageUrl: "https://i.imgur.com/JyVIB5o.png",
-    isNew: true,
-  },
-];
-
 const ProductSection = ({ title, viewAllLink, filterOptions }: ProductSectionProps) => {
   const [activeFilter, setActiveFilter] = useState(filterOptions[0] || "");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const data = await getProducts(activeFilter !== "All Products" ? activeFilter : undefined, 10);
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchProducts();
+  }, [activeFilter]);
   
   return (
     <div className="my-8">
@@ -83,34 +61,46 @@ const ProductSection = ({ title, viewAllLink, filterOptions }: ProductSectionPro
         </div>
       </div>
       
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            imageUrl={product.imageUrl}
-            title={product.title}
-            price={product.price}
-            rating={product.rating}
-            isNew={product.isNew}
-            isSale={product.isSale}
-          />
-        ))}
-      </div>
-      
-      {/* Second Row of Products */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-4">
-        {products.map((product) => (
-          <ProductCard
-            key={product.id + 100}
-            imageUrl={product.imageUrl}
-            title={product.title}
-            price={product.price}
-            rating={product.rating}
-            isNew={product.isNew}
-            isSale={product.isSale}
-          />
-        ))}
-      </div>
+      {loading ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="bg-gray-100 rounded-lg h-64 animate-pulse"></div>
+          ))}
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {products.slice(0, 5).map((product) => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                imageUrl={product.imageUrl}
+                title={product.title}
+                price={`PKR ${product.price.toFixed(2)}`}
+                rating={product.rating}
+                isNew={product.isNew}
+                isSale={product.isSale}
+              />
+            ))}
+          </div>
+          
+          {/* Second Row of Products */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-4">
+            {products.slice(5, 10).map((product) => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                imageUrl={product.imageUrl}
+                title={product.title}
+                price={`PKR ${product.price.toFixed(2)}`}
+                rating={product.rating}
+                isNew={product.isNew}
+                isSale={product.isSale}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };

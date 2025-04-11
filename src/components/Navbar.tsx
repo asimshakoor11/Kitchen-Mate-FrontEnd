@@ -1,14 +1,35 @@
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { User, Heart, Menu, X, ShoppingCart, Package } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
+import { AuthContext } from "@/App";
+import { toast } from "@/hooks/use-toast";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // This would be replaced with actual auth state
+  const { user, signOut } = useContext(AuthContext);
   const { getTotalItems } = useCart();
   const cartItemCount = getTotalItems();
+  const navigate = useNavigate();
+  
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Signed out",
+        description: "You have been signed out successfully",
+      });
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast({
+        title: "Error signing out",
+        description: "An error occurred while signing out",
+        variant: "destructive",
+      });
+    }
+  };
   
   return (
     <header className="bg-white shadow-sm">
@@ -30,7 +51,7 @@ const Navbar = () => {
             <Link to="/admin" className="text-gray-700 hover:text-gray-900 font-medium">
               Admin
             </Link>
-            {isLoggedIn && (
+            {user && (
               <Link to="/orders" className="text-gray-700 hover:text-gray-900 font-medium flex items-center gap-1">
                 <Package size={18} />
                 Orders
@@ -57,10 +78,10 @@ const Navbar = () => {
               )}
             </Link>
             
-            {isLoggedIn ? (
-              <Link to="/logout" className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded">
+            {user ? (
+              <button onClick={handleSignOut} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded">
                 Logout
-              </Link>
+              </button>
             ) : (
               <Link to="/login" className="bg-gray-900 hover:bg-black text-white font-medium py-2 px-4 rounded">
                 Login / Signup
@@ -100,7 +121,7 @@ const Navbar = () => {
               <Link to="/admin" className="py-2 text-gray-700 font-medium">
                 Admin
               </Link>
-              {isLoggedIn && (
+              {user && (
                 <Link to="/orders" className="py-2 text-gray-700 font-medium flex items-center gap-1">
                   <Package size={18} />
                   Orders
@@ -120,10 +141,10 @@ const Navbar = () => {
                   <span>Wishlist</span>
                 </button>
               </div>
-              {isLoggedIn ? (
-                <Link to="/logout" className="bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded text-center">
+              {user ? (
+                <button onClick={handleSignOut} className="bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded text-center">
                   Logout
-                </Link>
+                </button>
               ) : (
                 <Link to="/login" className="bg-gray-900 text-white font-medium py-2 px-4 rounded text-center">
                   Login / Signup
