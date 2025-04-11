@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Heart, Share2, Star, ShoppingCart, ChevronRight, Truck, Shield, RefreshCw, ChevronDown, ChevronUp } from "lucide-react";
@@ -296,16 +295,16 @@ const ProductDetail = () => {
           <h2 className="text-xl font-bold mb-4">You May Also Like</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {relatedProducts.map((product) => (
-              <Link key={product.id} to={`/products/${product.id}`}>
-                <ProductCard
-                  imageUrl={product.imageUrl}
-                  title={product.title}
-                  price={product.price}
-                  rating={product.rating}
-                  isNew={product.isNew}
-                  isSale={product.isSale}
-                />
-              </Link>
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                imageUrl={product.imageUrl}
+                title={product.title}
+                price={product.price}
+                rating={product.rating}
+                isNew={product.isNew}
+                isSale={product.isSale}
+              />
             ))}
           </div>
         </div>

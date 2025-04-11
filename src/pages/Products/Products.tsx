@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search, ChevronDown, Filter } from "lucide-react";
@@ -284,16 +283,16 @@ const Products = () => {
         {products.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {products.map((product) => (
-              <Link key={product.id} to={`/products/${product.id}`}>
-                <ProductCard
-                  imageUrl={product.imageUrl}
-                  title={product.title}
-                  price={product.price}
-                  rating={product.rating}
-                  isNew={product.isNew}
-                  isSale={product.isSale}
-                />
-              </Link>
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                imageUrl={product.imageUrl}
+                title={product.title}
+                price={product.price}
+                rating={product.rating}
+                isNew={product.isNew}
+                isSale={product.isSale}
+              />
             ))}
           </div>
         ) : (
