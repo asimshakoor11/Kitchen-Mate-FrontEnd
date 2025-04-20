@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { createContext } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Auth/Login";
@@ -20,6 +21,17 @@ import Checkout from "./pages/Cart/Checkout";
 import { CartProvider } from "./contexts/CartContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
+
+// Create Auth Context
+export const AuthContext = createContext<{
+  session: any;
+  user: any;
+  signOut: () => Promise<void>;
+}>({
+  session: null,
+  user: null,
+  signOut: async () => {},
+});
 
 const queryClient = new QueryClient();
 
