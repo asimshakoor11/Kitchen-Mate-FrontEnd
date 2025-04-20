@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
-import { supabase, Product } from "@/lib/supabase";
 
 export interface CartItem {
   id: string;
@@ -29,27 +28,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
 
-  // Check authentication status
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUserId(session?.user?.id || null);
-      
-      // Subscribe to auth changes
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(
-        (_event, session) => {
-          setUserId(session?.user?.id || null);
-        }
-      );
-      
-      return () => {
-        subscription.unsubscribe();
-      };
-    };
-    
-    checkAuth();
-  }, []);
-
   // Load cart from localStorage on mount
   useEffect(() => {
     const savedCart = localStorage.getItem("cart");
@@ -66,39 +44,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
     
-    // If user is logged in, sync cart with Supabase
-    if (userId) {
-      syncCartWithSupabase();
-    }
   }, [cartItems, userId]);
   
   // Sync cart with Supabase
-  const syncCartWithSupabase = async () => {
-    if (!userId) return;
-    
-    try {
-      // First delete existing cart items
-      await supabase
-        .from('cart_items')
-        .delete()
-        .eq('user_id', userId);
-        
-      // Then insert new cart items
-      if (cartItems.length > 0) {
-        const cartItemsForDb = cartItems.map(item => ({
-          user_id: userId,
-          product_id: item.id,
-          quantity: item.quantity,
-        }));
-        
-        await supabase
-          .from('cart_items')
-          .insert(cartItemsForDb);
-      }
-    } catch (error) {
-      console.error('Error syncing cart with Supabase:', error);
-    }
-  };
+ 
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
     setCartItems((prevItems) => {
