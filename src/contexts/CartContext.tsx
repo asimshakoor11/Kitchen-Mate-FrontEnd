@@ -1,20 +1,20 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
 
 export interface CartItem {
-  id: number;
+  id: string;
   title: string;
   price: string;
   imageUrl: string;
   quantity: number;
+  stock: number;
 }
 
 interface CartContextType {
   cartItems: CartItem[];
   addToCart: (item: Omit<CartItem, "quantity">) => void;
-  removeFromCart: (id: number) => void;
-  updateQuantity: (id: number, quantity: number) => void;
+  removeFromCart: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   getTotalPrice: () => number;
   getTotalItems: () => number;
@@ -22,7 +22,9 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   // Load cart from localStorage on mount
@@ -43,52 +45,86 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [cartItems]);
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
-    setCartItems(prevItems => {
-      const existingItem = prevItems.find(cartItem => cartItem.id === item.id);
-      
+    setCartItems((prevItems) => {
+      const existingItem = prevItems.find(
+        (cartItem) => cartItem.id === item.id
+      );
+
       if (existingItem) {
+        if (existingItem.quantity + 1 > item.stock) {
+          toast({
+            title: "Stock limit reached",
+            description: `Cannot add more ${item.title} to cart. Only ${item.stock} available.`,
+            variant: "destructive",
+          });
+          return prevItems;
+        }
+
         toast({
           title: "Item already in cart",
           description: `Increased quantity of ${item.title}`,
         });
-        
-        return prevItems.map(cartItem => 
-          cartItem.id === item.id 
-            ? { ...cartItem, quantity: cartItem.quantity + 1 } 
+
+        return prevItems.map((cartItem) =>
+          cartItem.id === item.id
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
             : cartItem
         );
       } else {
+        if (item.stock < 1) {
+          toast({
+            title: "Out of stock",
+            description: `${item.title} is currently out of stock`,
+            variant: "destructive",
+          });
+          return prevItems;
+        }
+
         toast({
           title: "Added to cart",
           description: `${item.title} added to your cart`,
         });
-        
+
         return [...prevItems, { ...item, quantity: 1 }];
       }
     });
   };
 
-  const removeFromCart = (id: number) => {
-    setCartItems(prevItems => {
-      const itemToRemove = prevItems.find(item => item.id === id);
+  const removeFromCart = (id: string) => {
+    setCartItems((prevItems) => {
+      const itemToRemove = prevItems.find((item) => String(item.id).includes(id));
+
       if (itemToRemove) {
         toast({
           title: "Removed from cart",
           description: `${itemToRemove.title} removed from your cart`,
         });
       }
-      return prevItems.filter(item => item.id !== id);
+      return prevItems.filter((item) => !String(item.id).includes(id));
     });
   };
 
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (id: string, quantity: number) => {
     if (quantity < 1) return;
-    
-    setCartItems(prevItems => 
-      prevItems.map(item => 
-        item.id === id ? { ...item, quantity } : item
-      )
-    );
+
+    setCartItems((prevItems) => {
+      const itemToUpdate = prevItems.find((item) => String(item.id).includes(id));
+      
+      if (!itemToUpdate) return prevItems;
+
+      if (quantity > itemToUpdate.stock) {
+        toast({
+          title: "Stock limit reached",
+          description: `Cannot add more than ${itemToUpdate.stock} items of ${itemToUpdate.title}`,
+          variant: "destructive",
+        });
+        return prevItems;
+      }
+
+      return prevItems.map((item) =>
+        String(item.id).includes(id) ? { ...item, quantity } : item
+      );
+    });
   };
 
   const clearCart = () => {
@@ -101,9 +137,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const getTotalPrice = () => {
     return cartItems.reduce((total, item) => {
-      // Extract numeric value from price string (e.g., "PKR 218.00" -> 218.00)
-      const priceValue = parseFloat(item.price.replace(/[^0-9.]/g, ''));
-      return total + (priceValue * item.quantity);
+      const priceValue = parseFloat(item.price.replace(/[^0-9.]/g, ""));
+      return total + priceValue * item.quantity;
     }, 0);
   };
 
@@ -118,7 +153,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     updateQuantity,
     clearCart,
     getTotalPrice,
-    getTotalItems
+    getTotalItems,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

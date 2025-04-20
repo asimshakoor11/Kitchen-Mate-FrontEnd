@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Minus, Plus, X, ShoppingBag } from "lucide-react";
@@ -58,27 +57,34 @@ const Cart = () => {
                     
                     <div className="ml-4 flex-1">
                       <h3 className="text-sm font-medium text-gray-900">{item.title}</h3>
-                      <p className="text-sm text-gray-500 mt-1">{item.price}</p>
+                      <p className="text-sm text-gray-500 mt-1">Rs: {item.price}</p>
+                      <p className="text-xs text-gray-400 mt-1">
+                        {item.stock > 0 
+                          ? `${item.stock} available in stock` 
+                          : "Out of stock"}
+                      </p>
                     </div>
                     
                     <div className="flex items-center">
                       <button 
                         onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
                         className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center"
+                        disabled={item.quantity <= 1}
                       >
-                        <Minus size={14} />
+                        <Minus size={14} className={item.quantity <= 1 ? "text-gray-300" : ""} />
                       </button>
                       <span className="w-8 text-center mx-1">{item.quantity}</span>
                       <button 
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
                         className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center"
+                        disabled={item.quantity >= item.stock}
                       >
-                        <Plus size={14} />
+                        <Plus size={14} className={item.quantity >= item.stock ? "text-gray-300" : ""} />
                       </button>
                     </div>
                     
                     <div className="ml-4 text-sm font-medium text-gray-900">
-                      {(parseFloat(item.price.replace(/[^0-9.]/g, '')) * item.quantity).toFixed(2)}
+                      Rs: {(parseFloat(item.price.replace(/[^0-9.]/g, '')) * item.quantity).toFixed(2)}
                     </div>
                     
                     <button 
@@ -107,20 +113,25 @@ const Cart = () => {
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-gray-500">Subtotal</span>
-                  <span className="font-medium">PKR {totalPrice.toFixed(2)}</span>
+                  <span className="font-medium">Rs: {totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Delivery Fee</span>
-                  <span className="font-medium">PKR {totalPrice > 0 ? deliveryFee.toFixed(2) : '0.00'}</span>
+                  <span className="font-medium">Rs {totalPrice > 0 ? deliveryFee.toFixed(2) : '0.00'}</span>
                 </div>
                 <Separator className="my-3" />
                 <div className="flex justify-between text-lg font-bold">
                   <span>Total</span>
-                  <span>PKR {totalWithDelivery.toFixed(2)}</span>
+                  <span>RS: {totalWithDelivery.toFixed(2)}</span>
                 </div>
               </div>
               
-              <Button className="w-full mt-6" size="lg" onClick={() => navigate("/checkout")}>
+              <Button 
+                className="w-full mt-6" 
+                size="lg" 
+                onClick={() => navigate("/checkout")}
+                disabled={cartItems.some(item => item.quantity > item.stock)}
+              >
                 Proceed to Checkout
               </Button>
               

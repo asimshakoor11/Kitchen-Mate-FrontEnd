@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const DiscountSignup = () => {
   const [formData, setFormData] = useState({
@@ -7,6 +8,8 @@ const DiscountSignup = () => {
     phone: "",
     email: "",
   });
+
+  const navigate = useNavigate()
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -15,8 +18,8 @@ const DiscountSignup = () => {
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Handle form submission here
+    
+    navigate('/login')
   };
   
   return (

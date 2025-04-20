@@ -31,7 +31,7 @@ const OfferBanner = ({
         </Link>
       </div>
       
-      <div className={`absolute ${imageSide === "left" ? "left-0" : "right-0"} bottom-0 w-1/2 h-full`}>
+      <div className={`absolute ${imageSide === "left" ? "left-0" : "right-0"} bottom-0 h-full`}>
         <img 
           src={imageUrl || "https://images.unsplash.com/photo-1546173159-315724a31696?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} 
           alt={title} 

@@ -55,10 +55,10 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
         </button>
       </div>
 
-      <div className="flex">
+      <div className="flex ">
         {/* Sidebar */}
         <aside 
-          className={`${
+          className={`min-h-screen fixed top-0 bottom-0 ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           } fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r transition-transform duration-300 ease-in-out lg:translate-x-0`}
         >
@@ -148,7 +148,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-4 lg:p-8">
+        <main className="flex-1 p-4 lg:p-8 max-h-screen overflow-y-scroll">
           {/* Mobile sidebar backdrop */}
           {isSidebarOpen && (
             <div 

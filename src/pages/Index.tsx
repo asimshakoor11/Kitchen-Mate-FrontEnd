@@ -18,15 +18,14 @@ const Index = () => {
         <Categories />
         <ProductSection 
           title="Trending Products" 
-          viewAllLink="#" 
-          filterOptions={["ALL", "FRUITS & VEGE", "JUICE"]}
+          viewAllLink="/products" 
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-12">
           <OfferBanner 
             title="Luxa Dark Chocolate"
             description="Very tasty & naturally made Finest creamy, mouthwatering"
             bgColor="bg-[#FBF2F0]"
-            imageUrl="/lovable-uploads/881103a4-6b3c-40c4-a191-a10c13890b86.png"
+            imageUrl="/images/ad-image-3.png"
             imageSide="left"
             badgeText="NEW OFFER"
           />
@@ -34,7 +33,7 @@ const Index = () => {
             title="Creamy Muffins"
             description="Very tasty & naturally made Finest creamy, mouthwatering"
             bgColor="bg-[#F0F7FB]"
-            imageUrl="/lovable-uploads/881103a4-6b3c-40c4-a191-a10c13890b86.png"
+            imageUrl="/images/ad-image-4.png"
             imageSide="right"
             badgeText="NEW OFFER"
           />
@@ -42,8 +41,7 @@ const Index = () => {
         <DiscountSignup />
         <ProductSection 
           title="Just arrived" 
-          viewAllLink="#" 
-          filterOptions={[]}
+          viewAllLink="/products" 
         />
         <Features />
       </main>

@@ -1,15 +1,15 @@
-
 import { useState } from "react";
 import { User, Heart, Menu, X, ShoppingCart, Package } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // This would be replaced with actual auth state
+  const { isAuthenticated, user, logout } = useAuth();
   const { getTotalItems } = useCart();
   const cartItemCount = getTotalItems();
-  
+
   return (
     <header className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -18,56 +18,78 @@ const Navbar = () => {
           <div className="flex-shrink-0 font-bold text-xl">
             <Link to="/">Kitchen Mate</Link>
           </div>
-          
+
           {/* Nav Links - Hidden on mobile */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-gray-700 hover:text-gray-900 font-medium">
+            <Link
+              to="/"
+              className="text-gray-700 hover:text-gray-900 font-medium"
+            >
               Home
             </Link>
-            <Link to="/products" className="text-gray-700 hover:text-gray-900 font-medium">
+            <Link
+              to="/products"
+              className="text-gray-700 hover:text-gray-900 font-medium"
+            >
               Products
             </Link>
-            <Link to="/admin" className="text-gray-700 hover:text-gray-900 font-medium">
+            <Link
+              to="/admin"
+              className="text-gray-700 hover:text-gray-900 font-medium"
+            >
               Admin
             </Link>
-            {isLoggedIn && (
-              <Link to="/orders" className="text-gray-700 hover:text-gray-900 font-medium flex items-center gap-1">
+            {isAuthenticated && user && (
+              <Link
+                to="/orders"
+                className="text-gray-700 hover:text-gray-900 font-medium flex items-center gap-1"
+              >
                 <Package size={18} />
                 Orders
               </Link>
             )}
           </div>
-          
+
           {/* Contact and Icons - Hidden on mobile */}
           <div className="hidden md:flex items-center space-x-6">
             <div className="text-right">
               <p className="text-xs text-gray-500">For Delivery</p>
               <p className="text-sm font-semibold">+880-1686608</p>
             </div>
-            <Link to="/account">
-              <User size={20} className="text-gray-700" />
-            </Link>
-            <Heart size={20} className="text-gray-700" />
-            <Link to="/cart" className="relative">
-              <ShoppingCart size={20} className="text-gray-700" />
-              {cartItemCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {cartItemCount}
-                </span>
-              )}
-            </Link>
-            
-            {isLoggedIn ? (
-              <Link to="/logout" className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded">
-                Logout
+            {isAuthenticated && user && (
+              <Link to="/orders" className="flex items-center gap-2">
+                <User size={20} className="text-gray-700" />
+                <span className="text-sm">{user?.name}</span>
               </Link>
+            )}
+            {isAuthenticated && user && (
+              <Link to="/cart" className="relative">
+                <ShoppingCart size={20} className="text-gray-700" />
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {cartItemCount}
+                  </span>
+                )}
+              </Link>
+            )}
+
+            {isAuthenticated ? (
+              <button
+                onClick={logout}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded"
+              >
+                Logout
+              </button>
             ) : (
-              <Link to="/login" className="bg-gray-900 hover:bg-black text-white font-medium py-2 px-4 rounded">
-                Login / Signup
+              <Link
+                to="/login"
+                className="bg-gray-900 hover:bg-black text-white font-medium py-2 px-4 rounded"
+              >
+                Login
               </Link>
             )}
           </div>
-          
+
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <Link to="/cart" className="relative mr-4">
@@ -79,14 +101,15 @@ const Navbar = () => {
               )}
             </Link>
             <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? 
-                <X size={24} className="text-gray-700" /> : 
+              {isMenuOpen ? (
+                <X size={24} className="text-gray-700" />
+              ) : (
                 <Menu size={24} className="text-gray-700" />
-              }
+              )}
             </button>
           </div>
         </div>
-        
+
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden pb-4">
@@ -100,8 +123,11 @@ const Navbar = () => {
               <Link to="/admin" className="py-2 text-gray-700 font-medium">
                 Admin
               </Link>
-              {isLoggedIn && (
-                <Link to="/orders" className="py-2 text-gray-700 font-medium flex items-center gap-1">
+              {isAuthenticated && (
+                <Link
+                  to="/orders"
+                  className="py-2 text-gray-700 font-medium flex items-center gap-1"
+                >
                   <Package size={18} />
                   Orders
                 </Link>
@@ -120,12 +146,18 @@ const Navbar = () => {
                   <span>Wishlist</span>
                 </button>
               </div>
-              {isLoggedIn ? (
-                <Link to="/logout" className="bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded text-center">
+              {isAuthenticated ? (
+                <button
+                  onClick={logout}
+                  className="bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded text-center"
+                >
                   Logout
-                </Link>
+                </button>
               ) : (
-                <Link to="/login" className="bg-gray-900 text-white font-medium py-2 px-4 rounded text-center">
+                <Link
+                  to="/login"
+                  className="bg-gray-900 text-white font-medium py-2 px-4 rounded text-center"
+                >
                   Login / Signup
                 </Link>
               )}
