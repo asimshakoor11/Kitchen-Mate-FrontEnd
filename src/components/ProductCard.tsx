@@ -59,21 +59,6 @@ const ProductCard = ({
       {/* Action Buttons */}
       <div className="absolute top-2 right-2 z-10 flex flex-col gap-2">
         <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setIsWishlist(!isWishlist);
-          }}
-          className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
-        >
-          <Heart
-            size={16}
-            className={
-              isWishlist ? "fill-red-500 text-red-500" : "text-gray-500"
-            }
-          />
-        </button>
-        <button
           onClick={handleAddToCart}
           className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
         >

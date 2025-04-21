@@ -26,7 +26,7 @@ const Index = () => {
             description="Very tasty & naturally made Finest creamy, mouthwatering"
             bgColor="bg-[#FBF2F0]"
             imageUrl="/images/ad-image-3.png"
-            imageSide="left"
+            imageSide="right"
             badgeText="NEW OFFER"
           />
           <OfferBanner 

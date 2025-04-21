@@ -20,7 +20,7 @@ const OfferBanner = ({
 }: OfferBannerProps) => {
   return (
     <div className={`${bgColor} rounded-lg p-6 relative overflow-hidden`}>
-      <div className={`relative z-10 max-w-xs ${imageSide === "right" ? "ml-0" : "ml-auto"}`}>
+      <div className={`relative z-10 max-w-[250px]  md:max-w-xs ${imageSide === "right" ? "ml-0" : "ml-auto"}`}>
         <div className="text-amber-500 font-medium text-sm mb-2">{badgeText}</div>
         <h3 className="text-xl font-bold mb-2">{title}</h3>
         <p className="text-gray-600 text-xs mb-4">
@@ -35,7 +35,7 @@ const OfferBanner = ({
         <img 
           src={imageUrl || "https://images.unsplash.com/photo-1546173159-315724a31696?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"} 
           alt={title} 
-          className="h-full object-contain"
+          className="h-full max-w-52 object-contain"
         />
       </div>
     </div>

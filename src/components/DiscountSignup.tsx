@@ -24,9 +24,9 @@ const DiscountSignup = () => {
   
   return (
     <div className="bg-[#F0F7FB] rounded-lg p-6 my-12">
-      <div className="flex flex-col md:flex-row">
+      <div className="flex flex-col md:flex-row md:items-center">
         <div className="md:w-1/2 mb-6 md:mb-0">
-          <h3 className="text-2xl font-bold mb-2">
+          <h3 className="text-4xl font-bold mb-2">
             Get <span className="text-amber-500">25% Discount</span> <br />
             on your first purchase
           </h3>
