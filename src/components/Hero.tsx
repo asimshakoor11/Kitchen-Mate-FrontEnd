@@ -20,7 +20,7 @@ const Hero = () => {
           <div className="text-amber-500 font-medium mb-2">100% Natural</div>
           <h1 className="text-2xl md:text-4xl font-bold mb-2">Fresh Groceries & Summer Juice</h1>
           <p className="text-gray-600 text-sm mb-6">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dignissim massa duis elementum.
+          Discover our range of fresh groceries and refreshing summer juices. Made with natural ingredients to keep you healthy and energized.
           </p>
           <Link to={'/products'}>
           <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-6 rounded-md shadow-sm">

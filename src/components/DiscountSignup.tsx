@@ -31,7 +31,8 @@ const DiscountSignup = () => {
             on your first purchase
           </h3>
           <p className="text-gray-600 text-sm mb-4 max-w-xs">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dignissim massa duis elementum, habitant eget eu eget tortor pellentesque.
+          Sign up now and enjoy an exclusive 25% discount on your first order.
+          Stay updated with our latest offers and products!
           </p>
         </div>
         
