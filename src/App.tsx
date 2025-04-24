@@ -21,6 +21,8 @@ import Checkout from "./pages/Cart/Checkout";
 import { CartProvider } from "./contexts/CartContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
+import ResetPassword from "@/pages/Auth/ResetPassword";
 
 // Create Auth Context
 export const AuthContext = createContext<{
@@ -47,6 +49,8 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password/:token" element={<ResetPassword />} />
               <Route path="/products" element={<Products />} />
               <Route path="/products/:id" element={<ProductDetail />} />
               <Route element={<ProtectedRoute />}>
